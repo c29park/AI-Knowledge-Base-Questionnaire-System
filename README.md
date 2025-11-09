@@ -10,30 +10,9 @@ To focus on building the backbone of "Generate Answers" feature, I had to sacrif
 ## Workflow & Tools
 LangChain, LangGraph, LangSmith, Weaviate database, FastAPI, and GPT-5 Thinking for code development and ideas
 ## Answer Engine
+<img width="529" height="303" alt="graph" src="https://github.com/user-attachments/assets/7ca64eab-06c0-4c94-b336-79bcca148107" />
 
-Question
-  ↓
-[expand_node] → query rewrites
-  ↓
-[retrieve_node] → parallel vector searches + RRF fuse → parents
-  ↓
-[grade_retrieval_node] → retrieval_ok?
-      ├─ if False and retries_retrieval < MAX_RETRIEVAL_LOOPS:
-      │       ↓
-      │   [rewrite_queries_node] → bump counter → new rewrites
-      │       ↓
-      │   (loop back to) [retrieve_node]
-      └─ else:
-          ↓
-      [generate_node] → draft answer (citations stripped)
-          ↓
-      [grade_answer_node] → grounded? & answer_ok?
-              ├─ if (not grounded or not answer_ok) and retries_generation < MAX_REGEN_LOOPS:
-              │       ↓
-              │   (bump counter) → (loop back to) [generate_node]
-              └─ else:
-                  ↓
-               END (return answer + context)
+
                
 ## How It Works (High Level)
 - Modified [Multi-Representation Indexing](https://www.youtube.com/watch?v=gTCU9I6QqCE): KB questions are embedded using OpenAI and stored as "child" docs in Weaviate vectorDB, and the corresponding answers are stored as "parent" docs. The reason for this approach was to overcome the limitations of modern approaches where you retrieve document snippets. 
