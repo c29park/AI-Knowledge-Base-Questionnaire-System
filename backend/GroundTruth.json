@@ -1,0 +1,48 @@
+[
+  {
+    "id": "question_1",
+    "text": "Is multi-factor authentication required for accessing sensitive systems?",
+    "expected_answer": "Yes, MFA is required for all remote access and sensitive data systems, enforced through our identity management system. Authentication methods include hardware tokens, mobile authenticator apps, and SMS codes."
+  },
+  {
+    "id": "question_2",
+    "text": "Is an incident response plan documented and maintained?",
+    "expected_answer": "Yes, we maintain a comprehensive incident response plan with defined roles, responsibilities, procedures, incident classification, escalation procedures, and communication protocols. The plan is reviewed annually and team members receive training."
+  },
+  {
+    "id": "question_3",
+    "text": "Is antivirus/antimalware software deployed on all endpoints?",
+    "expected_answer": "Yes, enterprise antivirus is deployed on all workstations and servers with automatic daily definition updates, weekly full scans, enforced real-time protection, and user-disabled prevention."
+  },
+  {
+    "id": "question_4",
+    "text": "How does the organization manage and monitor privileged access across systems?",
+    "expected_answer": "Privileged access follows least privilege principles with manager-approved requests. Access is reviewed quarterly and during role changes. All privileged activities are logged and monitored in real-time with monthly audits. Alerts trigger for unusual behavior, and admin sessions are recorded and retained for 90 days."
+  },
+  {
+    "id": "question_5",
+    "text": "What encryption controls are in place to protect data throughout its lifecycle?",
+    "expected_answer": "Data is classified (public, internal, confidential, restricted) with appropriate handling requirements. All network transmission uses TLS 1.2+ or IPSec VPN. Data at rest is protected through database encryption, full-disk encryption on file servers, and BitLocker on endpoints. Keys are managed through a centralized system."
+  },
+  {
+    "id": "question_6",
+    "text": "What processes ensure vulnerabilities are identified and remediated in a timely manner?",
+    "expected_answer": "Monthly vulnerability scans are performed on production systems and weekly on internet-facing systems. Critical patches are applied within 7 days, high-severity within 30 days. Annual third-party penetration tests cover external, internal, and application security. Findings are tracked in a vulnerability management system with severity-based due dates, monthly progress reviews, and verification scans."
+  },
+  {
+    "id": "question_7",
+    "text": "What security controls are in place for artificial intelligence and machine learning models to prevent adversarial attacks?",
+    "expected_answer": "No information available in the knowledge base."
+  },
+  {
+    "id": "question_8",
+    "text": "How does the organization secure blockchain-based applications and cryptocurrency wallets?",
+    "expected_answer": "No information available in the knowledge base."
+  },
+  {
+    "id": "question_9",
+    "text": "What security measures are implemented for IoT devices and OT (operational technology) systems?",
+    "expected_answer": "No information available in the knowledge base."
+  }
+]
+

@@ -1,0 +1,9 @@
+[answers] Wrote 9 answers -> answers.json
+[LangSmith] Using existing dataset 'SecurityQA-Questions' with 9 examples.
+[LangSmith] Ready to evaluate on 9 examples from 'SecurityQA-Questions'.
+View the evaluation results for experiment: 'answer-quality-rag-graph-60a3d659' at:
+https://smith.langchain.com/o/7fb31a89-1602-526d-999d-31d9beadef65/datasets/01eedca3-05e1-4de4-ba26-32822c20a396/compare?selectedSessions=dc0c36fd-eb5a-4fc6-8dda-9e913d07e11d
+
+
+0it [00:00, ?it/s]1it [00:10, 10.29s/it]2it [00:11,  4.75s/it]3it [00:13,  3.48s/it]4it [00:18,  4.35s/it]9it [00:22,  1.68s/it]9it [00:22,  2.50s/it]
+Experiment: answer-quality-rag-graph-60a3d659
