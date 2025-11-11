@@ -3,3 +3,10 @@ uvicorn[standard]
 python-dotenv
 langchain-openai
 weaviate-client
+langgraph
+langsmith
+langchain-community
+langchain-classic
+langchain-core
+openai
+pydantic
