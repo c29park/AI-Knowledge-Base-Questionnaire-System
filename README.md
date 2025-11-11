@@ -75,7 +75,7 @@ uvicorn app:app --reload
 ```
 
 ## 4. Frontend
-From the "my-react18-app folder, run:
+From the "my-react18-app" folder, run:
 
 ```bash
 #in case you haven't installed
