@@ -47,7 +47,7 @@ Typical list prices you can use for rough estimates:
 - (Optional) **LangSmith API key**
 
 ## 1. Environment
-
+(Refer to backend/.env_example file)
 Create `backend/.env`:
 
 ```bash
