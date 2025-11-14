@@ -5,10 +5,8 @@ Upload a **knowledge base (KB)** and a set of **input questions**, then generate
 
 ## Time Spent
 About 40 hours
-### Tradeoffs made
-To focus on building the backbone of "Generate Answers" feature, I had to sacrifice user-friendly User Interface. 
 ## Workflow & Tools
-LangChain, LangGraph, LangSmith, Weaviate database, FastAPI, and GPT-5 Thinking for code development and ideas
+LangChain, LangGraph, LangSmith, Weaviate database, FastAPI, React
 ## Answer Engine
 <img width="700" height="500" alt="graph" src="https://github.com/user-attachments/assets/7ca64eab-06c0-4c94-b336-79bcca148107" />
 
