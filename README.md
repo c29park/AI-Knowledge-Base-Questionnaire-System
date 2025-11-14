@@ -1,7 +1,7 @@
 
 # GenAI — RAG + LangGraph Demo
 
-Upload a **knowledge base (KB)** and a set of **security questions**, then generate answers with a LangGraph RAG pipeline backed by **Weaviate** (Docker) and **OpenAI** (embeddings + generation). Review the generated answers and the exact retrieved context in a React UI.
+Upload a **knowledge base (KB)** and a set of **input questions**, then generate answers with a LangGraph RAG pipeline backed by **Weaviate** (Docker) and **OpenAI** (embeddings + generation). Review the generated answers and the exact retrieved context.
 
 ## Time Spent
 About 40 hours
