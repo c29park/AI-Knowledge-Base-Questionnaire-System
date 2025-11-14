@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 [
   {
     "id": "question_1",
@@ -37,43 +36,3 @@
     "text": "What security measures are implemented for IoT devices and OT (operational technology) systems?"
   }
 ]
-=======
-[
-  {
-    "id": "question_1",
-    "text": "Is multi-factor authentication required for accessing sensitive systems?"
-  },
-  {
-    "id": "question_2",
-    "text": "Is an incident response plan documented and maintained?"
-  },
-  {
-    "id": "question_3",
-    "text": "Is antivirus/antimalware software deployed on all endpoints?"
-  },
-  {
-    "id": "question_4",
-    "text": "How does the organization manage and monitor privileged access across systems?"
-  },
-  {
-    "id": "question_5",
-    "text": "What encryption controls are in place to protect data throughout its lifecycle?"
-  },
-  {
-    "id": "question_6",
-    "text": "What processes ensure vulnerabilities are identified and remediated in a timely manner?"
-  },
-  {
-    "id": "question_7",
-    "text": "What security controls are in place for artificial intelligence and machine learning models to prevent adversarial attacks?"
-  },
-  {
-    "id": "question_8",
-    "text": "How does the organization secure blockchain-based applications and cryptocurrency wallets?"
-  },
-  {
-    "id": "question_9",
-    "text": "What security measures are implemented for IoT devices and OT (operational technology) systems?"
-  }
-]
->>>>>>> bd9db97 (first commit)
