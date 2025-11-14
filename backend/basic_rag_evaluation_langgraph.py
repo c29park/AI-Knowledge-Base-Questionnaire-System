@@ -334,6 +334,8 @@ def _retrieve_topk(query: str, k: int) -> List[Document]:
 def make_app():
     g = StateGraph(RAGState)
 
+    # ---------------- NODES ----------------
+
     @traceable(name="expand_node")
     def expand_node(state: RAGState) -> RAGState:
         variants = expand_queries(state["question"])
@@ -386,72 +388,102 @@ def make_app():
         ans = generate_answer(state["question"], state.get("parents", []))
         return {**state, "answer": ans}
 
-    @traceable(name="bump_regen")
-    def bump_regen_node(state: RAGState) -> RAGState:
-        return {**state, "retries_generation": state.get("retries_generation", 0) + 1}
-
     @traceable(name="grade_answer")
     def grade_answer_node(state: RAGState) -> RAGState:
-        grounded_grade = rt_grade_groundedness(state.get("answer",""), state.get("parents", []))
-        quality_grade  = rt_grade_answer_quality(state["question"], state.get("answer",""))
+        grounded_grade = rt_grade_groundedness(state.get("answer", ""), state.get("parents", []))
+        quality_grade = rt_grade_answer_quality(state["question"], state.get("answer", ""))
         return {
             **state,
             "grounded": bool(grounded_grade.grounded),
             "answer_ok": bool(quality_grade.useful),
         }
 
-    # ---- register nodes ----
+    @traceable(name="bump_regen")
+    def bump_regen_node(state: RAGState) -> RAGState:
+        # Only used when we decide to regenerate the answer
+        return {**state, "retries_generation": state.get("retries_generation", 0) + 1}
+
+    # ---------------- ROUTERS ----------------
+
+    def _route_after_retrieval(state: RAGState) -> str:
+        """
+        Decide whether to retry retrieval (rewrite queries) or move to generate.
+        """
+        bad = not state.get("retrieval_ok", True)
+        too_many = state.get("retries_retrieval", 0) >= MAX_RETRIEVAL_LOOPS
+        return "retry" if (bad and not too_many) else "to_gen"
+
+    def _route_after_answer(state: RAGState) -> str:
+        """
+        Decide what to do after grading the answer.
+
+        - If the answer does NOT answer the question (answer_ok = False)
+          and we still have retrieval retries left -> go back to retrieval loop
+          via 'rewrite_queries'.
+
+        - Else if the answer DOES answer the question but is ungrounded
+          and we still have regen budget -> regenerate with same docs.
+
+        - Else -> finish.
+        """
+        answer_ok = state.get("answer_ok", True)
+        grounded = state.get("grounded", True)
+        ret_tries = state.get("retries_retrieval", 0)
+        gen_tries = state.get("retries_generation", 0)
+
+        # 1) Answer doesn't really answer the question -> treat as retrieval failure
+        if (not answer_ok) and ret_tries < MAX_RETRIEVAL_LOOPS:
+            return "to_retrieval"
+
+        # 2) Answer is on-topic but not grounded -> treat as generation failure
+        if (not grounded) and gen_tries < MAX_REGEN_LOOPS:
+            return "to_regen"
+
+        # 3) Otherwise we're done
+        return "to_end"
+
+    # ---------------- WIRING ----------------
+
     g.add_node("expand", expand_node)
     g.add_node("retrieve", retrieve_node)
     g.add_node("grade_retrieval", grade_retrieval_node)
     g.add_node("rewrite_queries", rewrite_queries_node)
     g.add_node("generate", generate_node)
     g.add_node("grade_answer", grade_answer_node)
-    g.add_node("bump_regen", bump_regen_node)  # <— was missing
+    g.add_node("bump_regen", bump_regen_node)
 
-    # ---- edges & conditional routing ----
     g.set_entry_point("expand")
 
-    # Expand -> Retrieve -> Grade retrieval
+    # Straight edges
     g.add_edge("expand", "retrieve")
     g.add_edge("retrieve", "grade_retrieval")
+    g.add_edge("rewrite_queries", "retrieve")
+    g.add_edge("generate", "grade_answer")
+    g.add_edge("bump_regen", "generate")
 
-    # If retrieval is poor, rewrite then re-retrieve; else go generate
-    def _route_after_retrieval(state: RAGState) -> str:
-        bad = not state.get("retrieval_ok", True)
-        too_many = state.get("retries_retrieval", 0) >= 2
-        return "retry" if (bad and not too_many) else "to_gen"
-
+    # Conditional edges after retrieval grading
     g.add_conditional_edges(
         "grade_retrieval",
         _route_after_retrieval,
         {
-            "retry": "rewrite_queries",
-            "to_gen": "generate",
+            "retry": "rewrite_queries",  # rewrite + re-retrieve
+            "to_gen": "generate",        # go ahead and answer
         },
     )
-    g.add_edge("rewrite_queries", "retrieve")
 
-    # Generate -> Grade answer
-    g.add_edge("generate", "grade_answer")
-
-    # If answer is hallucinated/low quality and under limit, bump & regenerate; else end
-    def _route_after_answer(state: RAGState) -> str:
-        needs_regen = (not state.get("grounded", True)) or (not state.get("answer_ok", True))
-        too_many = state.get("retries_generation", 0) >= 2
-        return "to_regen" if (needs_regen and not too_many) else "to_end"
-
+    # Conditional edges after answer grading
     g.add_conditional_edges(
         "grade_answer",
         _route_after_answer,
         {
-            "to_regen": "bump_regen",
+            "to_retrieval": "rewrite_queries",  # answer didn't answer question -> better retrieval
+            "to_regen": "bump_regen",          # answer ok but ungrounded -> regen with same docs
             "to_end": END,
         },
     )
-    g.add_edge("bump_regen", "generate")
 
     return g.compile()
+
 
 
 
